@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+if [[ $# -eq 1 ]]; then
+  session=$1
+else
+  echo "session $1 already exists"
+  exit 0
+fi
+
+if [[ -n $(pgrep tmux) ]]; then
+  active_sessions=$(tmux ls | sed 's/\(.*\)\: .*/\1/')
+else
+  active_sessions=""
+fi
+
+script_dir=$(dirname $0)
+
+for i in ${active_sessions}
+do
+  if [[ $session == $i ]]; then
+    echo "session $session already exists"
+    exit 0
+  fi
+done
+
+tmux_sessions=$(find * | sed 's/^tmux\-\(.*\).sh/\1/' | sed 's/tmux-.*//' | sed 's/\-/\_/g')
+
+for i in ${tmux_sessions}
+do
+  script_sessions=$(echo "$i" | sed 's/_/\-/g')
+  if [[ $session == $script_sessions ]] && [[ $session != "" ]]; then
+    sh "${script_dir}/tmux-${session}.sh"
+    exit 0
+  fi
+done
+
+tmux new -d -s "$session"
+tmux rename-window "$session"
+tmux new-window "nvim"
+tmux attach -t "$session"
