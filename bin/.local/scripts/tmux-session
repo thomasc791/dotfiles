@@ -23,7 +23,8 @@ do
   fi
 done
 
-tmux_sessions=$(find * | sed 's/^tmux\-\(.*\).sh/\1/' | sed 's/tmux-.*//' | sed 's/\-/\_/g')
+tmux_sessions=$(find $script_dir/* | sed 's/^tmux\-\(.*\).sh/\1/' | sed 's/tmux-.*//' | sed 's/\-/\_/g')
+echo "$script_dir"
 
 for i in ${tmux_sessions}
 do
@@ -37,4 +38,5 @@ done
 tmux new -d -s "$session"
 tmux rename-window "$session"
 tmux new-window "nvim"
+tmux send-keys C-b "1"
 tmux attach -t "$session"

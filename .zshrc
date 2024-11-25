@@ -121,6 +121,7 @@ export PATH=$PATH:/opt/texpresso
 export PATH=$PATH:/home/thomas/.cargo/bin
 export PATH=$PATH:/home/thomas/.partition/programs/julia/juliaup/julia-1.11.0+0.x64.linux.gnu/bin
 export PATH=$PATH:/home/thomas/.partition/programs/paraview/bin
+export PATH=$PATH:/home/thomas/bin/.local/scripts
 
 export JULIA_DEPOT_PATH="/home/thomas/.partition/programs/julia/"
 export JULIAUP_DEPOT_PATH="/home/thomas/.partition/programs/julia/"
@@ -128,12 +129,14 @@ export JULIAUP_DEPOT_PATH="/home/thomas/.partition/programs/julia/"
 # PS1 is the prompt, each time a command is run, the PS1 variable is executed,
 # [ -n $TMUX ] checks if we are in the tmux emulator. Only then the environment
 # variable is updated.
-export PS1=$PS1'$( [ -n $TMUX ] && tmux setenv -g TMUX_PWD_$(tmux display -p "#D" | tr -d %) $PWD)'
+export PS1=$PS1'$( [[ -n $TMUX ]] && tmux setenv -g TMUX_PWD_$(tmux display -p "#D" | tr -d %) $PWD)'
 
 trap "/home/thomas/.umount.sh" SIGHUP EXIT
 /home/thomas/.mount.sh
 
 alias python=python3
+alias ta='tmux attach'
+alias tk='tmux kill-session'
 
 activate() {
   venvExists=$(ls /home/thomas/.venv/ | grep "$1")
