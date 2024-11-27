@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+main()
+{
+  f=$1
+  echo "$f"
+  mupdf $f &
+  while inotifywait --event close_write $f; do
+    pkill -HUP mupdf
+  done
+}
+
+main $1
