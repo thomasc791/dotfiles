@@ -1,7 +1,11 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+
+trap "/home/thomas/.umount.sh" SIGHUP EXIT
+instant_prompt=$(source /home/thomas/.mount.sh)
+
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" && !instant_prompt ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
@@ -118,10 +122,10 @@ source $ZSH/oh-my-zsh.sh
 export PATH=$PATH:/opt/nvim-linux64/bin
 export PATH=$PATH:/usr/local/cuda-12.6/bin
 export PATH=$PATH:/opt/texpresso
-export PATH=$PATH:/home/thomas/.cargo/bin
-export PATH=$PATH:/home/thomas/.partition/programs/julia/juliaup/julia-1.11.0+0.x64.linux.gnu/bin
-export PATH=$PATH:/home/thomas/.partition/programs/paraview/bin
-export PATH=$PATH:/home/thomas/bin/.local/scripts
+export PATH=$PATH:$HOME/.cargo/bin
+export PATH=$PATH:$HOME/.partition/programs/julia/juliaup/julia-1.11.0+0.x64.linux.gnu/bin
+export PATH=$PATH:$HOME/.partition/programs/paraview/bin
+export PATH=$PATH:$HOME/bin/.local/scripts
 
 export JULIA_DEPOT_PATH="/home/thomas/.partition/programs/julia/"
 export JULIAUP_DEPOT_PATH="/home/thomas/.partition/programs/julia/"
@@ -131,11 +135,10 @@ export JULIAUP_DEPOT_PATH="/home/thomas/.partition/programs/julia/"
 # variable is updated.
 export PS1=$PS1'$( [[ -n $TMUX ]] && tmux setenv -g TMUX_PWD_$(tmux display -p "#D" | tr -d %) $PWD)'
 
-trap "/home/thomas/.umount.sh" SIGHUP EXIT
-/home/thomas/.mount.sh
-
+alias nvim-conf="cd ~/.config/nvim"
 alias python=python3
 alias ta='tmux attach'
+alias ts='tmux-session'
 alias tk='tmux kill-session'
 
 activate() {
@@ -149,6 +152,8 @@ activate() {
 
 alias pdoc="/home/thomas/.partition/documents/"
 alias pprog="/home/thomas/.partition/programs/"
+
+source <(fzf --zsh)
 
 # -----------------------------------------------------------------------
 # End
@@ -169,3 +174,5 @@ export PATH
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

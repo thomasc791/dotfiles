@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 
+if [[ $TMUX != "" ]]; then
+  echo "nested session... exitting"
+  exit 0
+fi
+
 if [[ $# -eq 1 ]]; then
   session=$1
 else
-  echo "session $1 already exists"
-  exit 0
+  session_path=$(find . -maxdepth 1 -type d | fzf)
+  if [[ $session_path == "" ]]; then
+    exit 0
+  else
+    session=$(basename "$session_path")
+  fi
 fi
 
 if [[ -n $(pgrep tmux) ]]; then
@@ -24,7 +33,6 @@ do
 done
 
 tmux_sessions=$(find $script_dir/* | sed 's/^tmux\-\(.*\).sh/\1/' | sed 's/tmux-.*//' | sed 's/\-/\_/g')
-echo "$script_dir"
 
 for i in ${tmux_sessions}
 do
