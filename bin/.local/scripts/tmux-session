@@ -13,6 +13,7 @@ else
     exit 0
   else
     session=$(basename "$session_path")
+    change_dir=session
   fi
 fi
 
@@ -43,8 +44,14 @@ do
   fi
 done
 
-tmux new -d -s "$session"
-tmux rename-window "$session"
+if [[ $session == "." ]]; then
+  session=$(basename $(pwd))
+  tmux new -d -s "$session"
+  tmux rename-window "$session"
+else
+  tmux new -d -s "$session"
+  tmux rename-window "$session"
+fi
 tmux new-window "nvim"
 tmux send-keys C-b "1"
 tmux attach -t "$session"
