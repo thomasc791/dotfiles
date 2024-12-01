@@ -8,11 +8,11 @@ fi
 if [[ $# -eq 1 ]]; then
   session=$1
 else
-  session_path=$(find . -maxdepth 1 -type d | fzf)
+  session_path=$(find . -maxdepth 2 -type d | fzf)
   if [[ $session_path == "" ]]; then
     exit 0
   else
-    session=$(basename "$session_path")
+    session=$(echo "$session_path" | sed "s/\.\///")
     change_dir="$(pwd)/$session"
   fi
 fi
@@ -49,6 +49,7 @@ if [[ $session == "." ]]; then
   tmux new -d -s "$session" -c "$change_dir"
   tmux rename-window "$session"
 else
+  session=$(basename "$session")  
   tmux new -d -s "$session" -c "$change_dir"
   tmux rename-window "$session"
 fi
