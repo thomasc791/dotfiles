@@ -8,7 +8,7 @@ fi
 if [[ $# -eq 1 ]]; then
   session=$1
 else
-  session_path=$(find . -maxdepth 2 -type d | fzf)
+  session_path=$(find . ~/.partition/documents/ ~/ -maxdepth 2 -type d | fzf)
   if [[ $session_path == "" ]]; then
     exit 0
   else
