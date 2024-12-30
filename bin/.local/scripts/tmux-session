@@ -39,7 +39,6 @@ do
 done
 
 tmux new -d -s "$session" -c "$session_path"
-tmux rename-window "$session"
 tmux new-window -c "$session_path" "nvim"
-tmux send-keys C-b "1"
+tmux swap-window -t 1
 tmux attach -t "$session"
