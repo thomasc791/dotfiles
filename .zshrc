@@ -82,6 +82,8 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git
+  zsh-syntax-highlighting
+  zsh-completions
   zsh-autosuggestions)
 
 source $ZSH/oh-my-zsh.sh
@@ -130,6 +132,12 @@ export PATH=$PATH:$HOME/bin/.local/scripts
 export JULIA_DEPOT_PATH="/home/thomas/.partition/programs/julia/"
 export JULIAUP_DEPOT_PATH="/home/thomas/.partition/programs/julia/"
 
+export JULIA_NUM_THREADS=6
+
+# ---- #
+# TMUX #
+# ---- #
+
 # PS1 is the prompt, each time a command is run, the PS1 variable is executed,
 # [ -n $TMUX ] checks if we are in the tmux emulator. Only then the environment
 # variable is updated.
@@ -141,10 +149,13 @@ alias ta='tmux attach'
 alias ts='tmux-session'
 alias tk='tmux kill-session'
 
+# ------ #
+# Python #
+# ------ #
 activate() {
   venvExists=$(ls /home/thomas/.venv/ | grep "$1")
   if [[ "$venvExists" == "$1" ]]; then
-    source "/home/thomas/.venv/$1/bin/activate"
+    source "/home/thomas/.venv/$1/bin/activate"  # commented out by conda initialize
   else
     echo "Virtual environment $1 does not exist"
   fi
@@ -152,8 +163,6 @@ activate() {
 
 alias pdoc="/home/thomas/.partition/documents/"
 alias pprog="/home/thomas/.partition/programs/"
-
-source <(fzf --zsh)
 
 # -----------------------------------------------------------------------
 # End
@@ -176,3 +185,38 @@ export PATH
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+source <(fzf --zsh)
+
+# Keybinds
+bindkey -e
+bindkey '^p' history-search-forward
+bindkey '^n' history-search-backward
+
+# History
+HISTSIZE=5000
+HISTFILE="$HOME/.zsh_history"
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+# Completion styling
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+
+pasteinit() {
+  OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+  zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
+}
+
+pastefinish() {
+  zle -N self-insert $OLD_SELF_INSERT
+}
+zstyle :bracketed-paste-magic paste-init pasteinit
+zstyle :bracketed-paste-magic paste-finish pastefinish
+
