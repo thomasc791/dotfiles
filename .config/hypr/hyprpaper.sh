@@ -9,7 +9,7 @@ preload() {
       echo "preload = $HOME/.wallpapers/$image" >> $HOME/.config/hypr/hyprpaper.conf
    done
 
-   current_image=$HOME/.wallpapers/${images[@]:0:1}
+   random_image=("${(f)$(ls -A /home/thomas/.wallpapers/ | shuf)}")
 }
 
 preload
@@ -18,7 +18,12 @@ echo "" >> $HOME/.config/hypr/hyprpaper.conf
 wallpaper() {
    monitors=("${(f)$(hyprctl monitors | grep Monitor | sed "s/.* \(.*\) (.*/\1/")}")
 
+   i=0
+
    for monitor in $monitors; do
+      current_image=$HOME/.wallpapers/${random_image[@]:$i:1}
+      ((i++))
+      echo $current_image
       echo "wallpaper = $monitor, $current_image" >> $HOME/.config/hypr/hyprpaper.conf
    done
 }

@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+# Sync packages
+sudo pacman -Sy
+
+packages=$(pacman -Qu | sed "s/\(.*\) [[:digit:]].* [[:digit:]].*/\1/")
+
+for package (${(f)packages}); do
+	sudo pacman -S $package
+done
