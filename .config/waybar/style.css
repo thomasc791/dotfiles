@@ -38,7 +38,11 @@ window#waybar {
 }
 
 #network {
-   margin: 0px 8px 0px 4px;
+   margin: 0px 4px 0px 4px;
+}
+
+#custom-audio {
+   margin: 0px 8px 0px 8px;
 }
 
 #custom-power {
