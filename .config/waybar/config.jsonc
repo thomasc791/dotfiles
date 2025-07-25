@@ -1,7 +1,40 @@
 {
    "layer": "top",
-   "modules-right": ["battery", "clock"],
+   "reload_style_on_change": true,
+   "modules-left": ["group/group-utilities"],
    "modules-center": ["hyprland/workspaces"],
+   "modules-right": ["cpu", "battery", "clock", "group/group-power"],
+
+   "group/group-utilities": {
+      "orientation": "inherit",
+      "drawer": {
+         "transition-duration": 100,
+         "children-class": "not-power",
+         "transition-left-to-right": false,
+      },
+      "modules": ["network", "network"]
+   },
+
+   // from waybar
+   "group/group-power": {
+      "orientation": "inherit",
+      "drawer": {
+         "transition-duration": 100,
+         "children-class": "not-power",
+         "transition-left-to-right": false,
+      },
+      "modules": [
+         "custom/power",
+         "custom/reboot",
+      ]
+   },
+
+   "network": {
+      "format": "{icon}",
+      "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
+      "tooltip": false,
+      "on-click": "hyprctl dispatch exec '[float]' nm-connection-editor",
+   },
 
    "hyprland/workspaces": {
       "format": "{icon}",
@@ -15,12 +48,37 @@
       }
    },
 
+   "cpu": {
+      "interval": 10,
+      "format": "{usage}% 󰻠",
+      "max-length": 10
+   },
+
    "battery": {
-      "format": "{capacity}% {icon} |",
-      "format-icons": ["", "", "", "", ""]
+      "format": "{capacity}% {icon}",
+      "format-icons": ["󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂀", "󰂁", "󰂂", "󰁹"]
    },
 
    "clock": {
+      "tooltip": false,
       "format-alt": "{:%a, %d. %b  %H:%M}"
-   }
+   },
+
+   "custom/power": {
+      "format": "󰤁 ",
+      "tooltip": false,
+      "on-click": "shutdown now",
+   },
+
+   "custom/reboot": {
+      "format": "󰜉",
+      "tooltip": false,
+      "on-click": "reboot",
+   },
+
+   "custom/delimiter": {
+      "format": " ",
+      "interval": "once",
+      "tooltip": false,
+   },
 }
