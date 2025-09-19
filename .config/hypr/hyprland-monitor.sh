@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 
+
 set_monitors() {
    monitors=("${(f)$(hyprctl monitors | grep Monitor | sed "s/.* \(.*\) (.*/\1/")}")
    sizes=("${(f)$(hyprctl monitors | grep availableModes)}")
@@ -14,8 +15,17 @@ set_monitors() {
          height=$(($height+$sizeHeight ))
       fi
 
-      hyprctl keyword monitor $monitor, $size, 0x-$height, 1
+      let scale=1.0
+
+      hyprctl keyword monitor $monitor, $size, 0x-$height, $scale
    done
 }
 
+set_wallpapers() {
+   killall hyprpaper
+   zsh /home/thomas/.config/hypr/hyprpaper.sh
+   hyprpaper &
+}
+
 set_monitors
+set_wallpapers
