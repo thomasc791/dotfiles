@@ -4,6 +4,9 @@
 set_monitors() {
    monitors=("${(f)$(hyprctl monitors | grep Monitor | sed "s/.* \(.*\) (.*/\1/")}")
    sizes=("${(f)$(hyprctl monitors | grep availableModes)}")
+   mainMonitor=("${(f)$(hyprctl monitors | grep -B 2 0x05A9 | grep Monitor | sed "s/.* \(.*\) (.*/\1/")}")
+
+   swap_places
 
    height=0
    for monitor in $monitors; do
@@ -18,6 +21,16 @@ set_monitors() {
       let scale=1.0
 
       hyprctl keyword monitor $monitor, $size, 0x-$height, $scale
+   done
+}
+
+swap_places() {
+   for monitor in $monitors; do
+      index="${monitors[(ie)$monitor]}"
+      if [[ $monitor == $mainMonitor ]]; then
+         monitors[index]=$monitors[1]
+         monitors[1]=$mainMonitor
+      fi
    done
 }
 
